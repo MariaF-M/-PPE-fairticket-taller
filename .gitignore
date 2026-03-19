@@ -1,2 +1,4 @@
 **/.gradle/**
 **/build/**
+backend_fairticket/documents/consideraciones_extra/*
+backend_fairticket/.vscode/settings.json
