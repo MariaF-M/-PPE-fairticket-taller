@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import upb.edu.co.fairticket.domain.model.enums.Role;
 import upb.edu.co.fairticket.domain.model.valueobjects.Email;
 
+import lombok.Getter;
+
 @Getter
 @AllArgsConstructor
 public class User {
@@ -16,22 +18,28 @@ public class User {
     private UUID id;
     private String name;
     private Email email;
+    private String passwordHash; 
+    private String rawPassword;
     private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static User createBuyer(String name, Email email) {
-        return new User(UUID.randomUUID(), name, email, Role.BUYER, LocalDateTime.now(), LocalDateTime.now());
+
+    public static User createBuyer(String name, Email email, String passwordHash, String rawPassword) {
+        return new User(UUID.randomUUID(), name, email, passwordHash, rawPassword, Role.BUYER, LocalDateTime.now(), LocalDateTime.now()); 
     }
 
-    public static User createOrganizer(String name, Email email) {
-        return new User(UUID.randomUUID(), name, email, Role.ORGANIZER,
-                LocalDateTime.now(), LocalDateTime.now());
+    public static User createOrganizer(String name, Email email, String passwordHash, String rawPassword) {
+        return new User(UUID.randomUUID(), name, email, passwordHash, rawPassword, Role.ORGANIZER, LocalDateTime.now(), LocalDateTime.now()); 
     }
 
-    public static User createAdmin(String name, Email email) {
-        return new User(UUID.randomUUID(), name, email, Role.ADMIN,
-                LocalDateTime.now(), LocalDateTime.now());
+    public static User createAdmin(String name, Email email, String passwordHash, String rawPassword) {
+        return new User(UUID.randomUUID(), name, email, passwordHash, rawPassword, Role.ADMIN, LocalDateTime.now(), LocalDateTime.now()); 
+    }
+
+    // Getter 
+    public String getRawPassword() {
+        return this.rawPassword; 
     }
 
     public void updateProfile(String name, Email email) {

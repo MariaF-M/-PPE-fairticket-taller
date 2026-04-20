@@ -9,8 +9,8 @@ class UserTest {
 
     @Test
     void testCreateMultipleBuyers() {
-        User shakira = User.createBuyer("Shakira", new Email("shakira@barranquilla.com"));
-        User karolG = User.createBuyer("Karol G", new Email("bichota@medellin.com"));
+        User shakira = User.createBuyer("Shakira", new Email("shakira@barranquilla.com"), "hash_falso", "plano_falso");
+        User karolG = User.createBuyer("Karol G", new Email("bichota@medellin.com"), "hash_falso", "plano_falso");
 
         assertNotNull(shakira.getId());
         assertEquals("Shakira", shakira.getName());
@@ -26,7 +26,7 @@ class UserTest {
     @Test
     void testCreateOrganizer() {
         Email email = new Email("juanes@medellin.com");
-        User juanes = User.createOrganizer("Juanes", email);
+        User juanes = User.createOrganizer("Juanes", email, "hash_falso", "plano_falso");
         assertEquals(Role.ORGANIZER, juanes.getRole());
         assertTrue(juanes.isOrganizer());
         assertEquals("Juanes", juanes.getName());
@@ -35,7 +35,7 @@ class UserTest {
     @Test
     void testCreateAdmin() {
         Email email = new Email("sofia.vergara@toto.com");
-        User sofia = User.createAdmin("Sofía Vergara", email);
+        User sofia = User.createAdmin("Sofía Vergara", email, "hash_falso", "plano_falso");
         assertEquals(Role.ADMIN, sofia.getRole());
         assertTrue(sofia.isAdmin());
         assertEquals("Sofía Vergara", sofia.getName());
@@ -44,7 +44,7 @@ class UserTest {
     @Test
     void testUpdateProfile() throws InterruptedException {
         Email oldEmail = new Email("rigoberto.uran@etixx.com");
-        User rigo = User.createBuyer("Rigoberto Urán", oldEmail);
+        User rigo = User.createBuyer("Rigoberto Urán", oldEmail, "hash_falso", "plano_falso");
 
         Thread.sleep(10);
 

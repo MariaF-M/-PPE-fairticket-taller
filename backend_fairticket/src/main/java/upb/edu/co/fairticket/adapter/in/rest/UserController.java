@@ -1,6 +1,8 @@
 package upb.edu.co.fairticket.adapter.in.rest;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,19 +22,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final RegisterUserUseCase registerUserUseCase;
-    private final ListUserUseCase listUserUseCase;
-    private final DeleteUserUseCase deleteUserUseCase;
-    private final ModifyUserUseCase modifyUserUseCase;
+    @Autowired
+    private ListUserUseCase listUserUseCase;
 
-    @PostMapping
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterUserRequest request) {
-        var user = switch (request.role().toUpperCase()) {
-            case "ORGANIZER" -> registerUserUseCase.registerOrganizer(request.name(), request.email());
-            default -> registerUserUseCase.registerBuyer(request.name(), request.email());
-        };
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.from(user));
-    }
+    @Autowired
+    private DeleteUserUseCase deleteUserUseCase;
+
+    @Autowired
+    private ModifyUserUseCase modifyUserUseCase;
 
     @GetMapping
     public ResponseEntity<List<UserResponse>> list() {

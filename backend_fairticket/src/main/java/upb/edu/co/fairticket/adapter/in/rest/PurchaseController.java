@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import upb.edu.co.fairticket.adapter.in.rest.dto.request.CreatePurchaseRequest;
 import upb.edu.co.fairticket.adapter.in.rest.dto.response.PurchaseResponse;
 import upb.edu.co.fairticket.domain.usecase.purchase.CreatePurchaseUseCase;
@@ -23,13 +24,13 @@ public class PurchaseController {
     private final GetPurchaseUseCase getPurchaseUseCase;
 
     @PostMapping
-    public ResponseEntity<PurchaseResponse> create(@RequestParam UUID buyerId, @RequestBody CreatePurchaseRequest request) {
+    public ResponseEntity<PurchaseResponse> create(@AuthenticationPrincipal UUID buyerId, @RequestBody CreatePurchaseRequest request) {
         var purchase = createPurchaseUseCase.execute(buyerId, request.eventId(), request.ticketIds());
         return ResponseEntity.status(HttpStatus.CREATED).body(PurchaseResponse.from(purchase));
     }
 
     @DeleteMapping("/{id}/cancel")
-    public ResponseEntity<PurchaseResponse> cancel(@PathVariable UUID id, @RequestParam UUID buyerId) {
+    public ResponseEntity<PurchaseResponse> cancel(@PathVariable UUID id, @AuthenticationPrincipal UUID buyerId) {
         var purchase = cancelPurchaseUseCase.execute(id, buyerId);
         return ResponseEntity.ok(PurchaseResponse.from(purchase));
     }
@@ -42,7 +43,7 @@ public class PurchaseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PurchaseResponse>> getByBuyer(@RequestParam UUID buyerId) {
+    public ResponseEntity<List<PurchaseResponse>> getByBuyer(@AuthenticationPrincipal UUID buyerId) {
         return ResponseEntity.ok(
             getPurchaseUseCase.getByBuyer(buyerId).stream().map(PurchaseResponse::from).toList());
     }

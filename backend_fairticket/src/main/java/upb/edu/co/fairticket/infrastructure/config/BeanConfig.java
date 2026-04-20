@@ -25,11 +25,6 @@ public class BeanConfig {
 
     // User Use Cases
     @Bean
-    public RegisterUserUseCase registerUserUseCase(UserRepository userRepository) {
-        return new RegisterUserUseCase(userRepository);
-    }
-
-    @Bean
     public ListUserUseCase listUserUseCase(UserRepository userRepository) {
         return new ListUserUseCase(userRepository);
     }

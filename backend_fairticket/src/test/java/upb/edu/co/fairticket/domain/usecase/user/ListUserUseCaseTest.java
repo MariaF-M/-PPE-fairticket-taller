@@ -26,9 +26,9 @@ class ListUserUseCaseTest {
 
     @Test
     void testExecuteReturnsUsers() {
-        User shakira = User.createBuyer("Shakira", new Email("shakira@barranquilla.com"));
-        User carlos = User.createBuyer("Carlos Vives", new Email("carlos@santamarta.com"));
-        User juanes = User.createBuyer("Juanes", new Email("juanes@medellin.com"));
+        User shakira = User.createBuyer("Shakira", new Email("shakira@barranquilla.com"), "hash_falso", "plano_falso");
+        User carlos = User.createBuyer("Carlos Vives", new Email("carlos@santamarta.com"), "hash_falso", "plano_falso");
+        User juanes = User.createBuyer("Juanes", new Email("juanes@medellin.com"), "hash_falso", "plano_falso");
         
         when(userRepository.findAll()).thenReturn(Arrays.asList(shakira, carlos, juanes));
 

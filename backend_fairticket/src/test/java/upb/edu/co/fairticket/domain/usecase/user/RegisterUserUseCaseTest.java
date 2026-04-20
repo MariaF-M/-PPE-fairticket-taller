@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import upb.edu.co.fairticket.domain.model.User;
 import upb.edu.co.fairticket.domain.model.valueobjects.Email;
 import upb.edu.co.fairticket.domain.port.UserRepository;
+import upb.edu.co.fairticket.domain.port.CredentialHasher;
 import upb.edu.co.fairticket.domain.exception.DomainException;
 
 import java.util.Optional;
@@ -23,6 +24,9 @@ class RegisterUserUseCaseTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private CredentialHasher credentialHasher;
+
     @InjectMocks
     private RegisterUserUseCase registerUserUseCase;
 
@@ -34,9 +38,10 @@ class RegisterUserUseCaseTest {
     })
     void testRegisterMultipleBuyersSuccess(String name, String emailStr) {
         when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.empty());
+        when(credentialHasher.hash(anyString())).thenReturn("hashed_password_dummy");
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        User result = registerUserUseCase.registerBuyer(name, emailStr);
+        User result = registerUserUseCase.registerBuyer(name, emailStr, "MiPassword123");
 
         assertNotNull(result);
         assertTrue(result.isBuyer());
@@ -52,9 +57,10 @@ class RegisterUserUseCaseTest {
     })
     void testRegisterMultipleOrganizersSuccess(String name, String emailStr) {
         when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.empty());
+        when(credentialHasher.hash(anyString())).thenReturn("hashed_password_dummy");
         when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        User result = registerUserUseCase.registerOrganizer(name, emailStr);
+        User result = registerUserUseCase.registerOrganizer(name, emailStr, "MiPassword123");
 
         assertNotNull(result);
         assertTrue(result.isOrganizer());
@@ -63,10 +69,10 @@ class RegisterUserUseCaseTest {
 
     @Test
     void testRegisterBuyerDuplicateEmailThrowsException() {
-        when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(User.createBuyer("Existing", new Email("falcao@santamarta.com"))));
+        when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(User.createBuyer("Existing", new Email("falcao@santamarta.com"), "hash_falso", "plano_falso")));
 
         DomainException exception = assertThrows(DomainException.class, 
-            () -> registerUserUseCase.registerBuyer("Radamel Falcao", "falcao@santamarta.com"));
+            () -> registerUserUseCase.registerBuyer("Radamel Falcao", "falcao@santamarta.com", "MiPassword123"));
 
         assertTrue(exception.getMessage().contains("Email already registered"));
         verify(userRepository, never()).save(any());
@@ -74,9 +80,9 @@ class RegisterUserUseCaseTest {
     
     @Test
     void testRegisterOrganizerDuplicateEmailThrowsException() {
-        when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(User.createBuyer("Existing", new Email("goyo@chocquibtown.com"))));
+        when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(User.createBuyer("Existing", new Email("goyo@chocquibtown.com"), "hash_falso", "plano_falso")));
 
         assertThrows(DomainException.class, 
-            () -> registerUserUseCase.registerOrganizer("Goyo", "goyo@chocquibtown.com"));
+            () -> registerUserUseCase.registerOrganizer("Goyo", "goyo@chocquibtown.com", "MiPassword123"));
     }
 }

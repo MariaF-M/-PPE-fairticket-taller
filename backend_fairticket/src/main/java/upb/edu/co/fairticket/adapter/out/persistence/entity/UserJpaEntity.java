@@ -23,6 +23,11 @@ public class UserJpaEntity {
 
     private String name;
 
+    private String passwordHash; 
+    
+    @Column(name = "raw_password")
+    private String rawPassword; 
+
     @Column(unique = true)
     private String email;
 
